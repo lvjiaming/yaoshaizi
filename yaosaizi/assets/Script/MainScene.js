@@ -16,6 +16,14 @@ cc.Class({
             default: null,
             type: cc.Label,
         },
+        SumShaiZiDianNode: {
+            default: null,
+            type: cc.Label,
+        },
+        MoShiOneNode: {
+            default: null,
+            type: cc.Node,
+        },
         CurSelectShaiZiNum: 0,  // 当前选择的骰子数量
         CurShaiZiZuHe: [],
     },
@@ -26,6 +34,7 @@ cc.Class({
         this.showAdvertList();
         this.initShuiZiNum();
         this.setSelectShaiZiNum();
+        this.setSumShaiZiDian();
     },
 
     start () {
@@ -64,8 +73,19 @@ cc.Class({
      * 设置骰子数量
      * @param data
      */
-    setShaiZiNum(data) {
-
+    setShaiZiNum() {
+        this.CurShaiZiZuHe.forEach((item1) => {
+            let num = 0;
+            this.CurShaiZiZuHe.forEach((item2) => {
+                if (item2 == item1) {
+                    num++;
+                }
+            });
+            const dian = this.ShuaiZiNumNode.getChildByName(`dian${item1}`);
+            if (dian) {
+                dian.getChildByName("num").getComponent(cc.Label).string = num;
+            }
+        });
     },
     /**
      *  设置当前选择的骰子数
@@ -73,6 +93,18 @@ cc.Class({
     setSelectShaiZiNum() {
         if (this.SelectShaiZiNumNode) {
             this.SelectShaiZiNumNode.string = this.CurSelectShaiZiNum;
+        }
+    },
+    /**
+     *  设置当前总点数
+     */
+    setSumShaiZiDian() {
+        if (this.SumShaiZiDianNode) {
+            let dian = 0;
+            this.CurShaiZiZuHe.forEach((item) => {
+                dian = dian + item;
+            });
+            this.SumShaiZiDianNode.string = dian;
         }
     },
     /**
@@ -105,10 +137,50 @@ cc.Class({
         }
         console.log(this.CurShaiZiZuHe);
     },
+    /**
+     *  摇骰子的动画
+     */
+    playAni() {
+        if (this.MoShiOneNode) {
+            const ani1 = cc.sequence(cc.moveTo(0.1, cc.p(-60,245)), cc.moveTo(0.1, cc.p(60,245)), cc.moveTo(0.1, cc.p(0,245)));
+            const ani = cc.repeat(ani1, 5);
+            this.MoShiOneNode.getChildByName("Ysz_Di").runAction(cc.sequence(ani, cc.callFunc(() => {
+                cc.log(`21111`);
+                this.aniPlay = false;
+            })));
+        }
+    },
     onYaoYiYao() {
         cc.log(`摇一摇`);
+        this.CurShaiZiZuHe = [];
+        this.setSumShaiZiDian();
         this.initShuiZiNum();
-        // this.createShaiZiZuHe();
+        this.createShaiZiZuHe();
+        // this.setShaiZiNum();
+        // this.setSumShaiZiDian();
+        if (this.CurShaiZiZuHe.length > 0 && !this.aniPlay && !this.isKia) {
+            this.aniPlay = true;
+            this.playAni();
+        }
+    },
+    onOpenGai() {
+        cc.log(`揭开盖子`);
+        if (!this.aniPlay) {
+            const cfg = [
+                cc.p(0,90),
+                cc.p(0, 400)
+            ];
+            if (this.isKia) {
+                this.isKia = 0;
+            } else {
+                this.isKia = 1;
+            }
+            if (this.isKia == 1) {
+                this.setShaiZiNum();
+                this.setSumShaiZiDian();
+            }
+            this.MoShiOneNode.getChildByName("Ysz_Di").getChildByName("Ysz_Gz").runAction(cc.moveTo(0.1, cfg[this.isKia]));
+        }
     },
     onShareClick() {
         cc.log(`分享`);

@@ -1,10 +1,9 @@
 {
-  "ver": "2.2.0",
+  "ver": "1.0.0",
   "uuid": "29d997a3-06a2-4c85-9a7e-a240a6af9034",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
-  "premultiplyAlpha": false,
   "subMetas": {
     "game_n_ysz_di": {
       "ver": "1.0.3",

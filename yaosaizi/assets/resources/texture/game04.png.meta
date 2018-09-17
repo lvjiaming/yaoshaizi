@@ -1,10 +1,9 @@
 {
-  "ver": "2.2.0",
+  "ver": "1.0.0",
   "uuid": "bab95ee4-c624-4547-bd5f-b187b9250c20",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
-  "premultiplyAlpha": false,
   "subMetas": {
     "game04": {
       "ver": "1.0.3",
