@@ -22,5 +22,18 @@ const GameCfg = {
         },
     ],
     MAX_SHUAIZI_NUM: 6,
+    GAME_MOSHI: { // 游戏模式
+        SIMPLE: 1, // 普通模式
+        CUSTOM: 2, // 自定义模式
+    },
+    CUSTOM_MOSHI_CFG: [
+        null,
+        "唱歌",
+        "跳舞",
+        "点击编辑",
+        "点击编辑",
+        "点击编辑",
+        "点击编辑",
+    ],
 };
 cc.gameCfg = GameCfg;
