@@ -46,10 +46,22 @@ cc.Class({
         this.initShuiZiNum();
         this.setSelectShaiZiNum();
         this.setSumShaiZiDian();
+        // cc.systemEvent.setAccelerometerEnabled(true);  // 开启重力感应
+        cc.systemEvent.on(cc.SystemEvent.EventType.DEVICEMOTION, this.deviceMotionCb, this);  // 注册重力感应监听
     },
 
     start () {
 
+    },
+    onDestroy() {
+        cc.systemEvent.off(cc.SystemEvent.EventType.DEVICEMOTION, this.deviceMotionCb, this); // 注销重力感应监听
+    },
+    /**
+     *  重力感应回调
+     */
+    deviceMotionCb(data) {
+        cc.log(data);
+        cc.log(data.acc.x + "   " + data.acc.y);
     },
 
     /**
@@ -249,25 +261,30 @@ cc.Class({
     },
     onYaoYiYao() {
         cc.log(`摇一摇`);
-        if (!this.isKia) {
+        // if (!this.isKia) {
             this.CurShaiZiZuHe = [];
             this.setSumShaiZiDian();
             this.initShuiZiNum();
             this.createShaiZiZuHe();
-        }
+        // }
         // this.setShaiZiNum();
         // this.setSumShaiZiDian();
-        if (this.CurShaiZiZuHe.length > 0 && !this.aniPlay && !this.isKia) {
-            this.aniPlay = true;
-            this.playAni();
+        if (this.CurShaiZiZuHe.length > 0 && !this.aniPlay) {
+            if (!this.isKia) {
+                this.aniPlay = true;
+                this.playAni();
+            } else {
+                cc.log(`盖子未盖`);
+                this.onOpenGai(null, null, this.playAni.bind(this));
+            }
         }
     },
-    onOpenGai() {
+    onOpenGai(event, custom, cb) {
         cc.log(`揭开盖子`);
         if (!this.aniPlay) {
             const cfg = [
                 cc.v2(0,90),
-                cc.v2(0, 400)
+                cc.v2(0, 800)
             ];
             if (this.isKia) {
                 this.isKia = 0;
@@ -278,8 +295,21 @@ cc.Class({
                 this.setShaiZiNum();
                 this.setSumShaiZiDian();
                 this.showShaiZi();
+            } else {
+                this.CurShaiZiZuHe = [];
+                this.setSumShaiZiDian();
+                this.initShuiZiNum();
             }
-            this.CurMoShiNode.getChildByName("Ysz_Di").getChildByName("Ysz_Gz").runAction(cc.moveTo(0.1, cfg[this.isKia]));
+            if (cb) {
+                this.aniPlay = true;
+            }
+            this.CurMoShiNode.getChildByName("Ysz_Di").getChildByName("Ysz_Gz").runAction(cc.sequence(cc.moveTo(0.1, cfg[this.isKia]), cc.callFunc(() => {
+                if (cb && cb instanceof Function) {
+                    this.CurShaiZiZuHe = [];
+                    this.createShaiZiZuHe();
+                    cb();
+                }
+            })));
         }
     },
     onChangeMoShiClick() {
