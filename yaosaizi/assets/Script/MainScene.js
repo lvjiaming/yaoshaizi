@@ -46,7 +46,8 @@ cc.Class({
         this.initShuiZiNum();
         this.setSelectShaiZiNum();
         this.setSumShaiZiDian();
-        // cc.systemEvent.setAccelerometerEnabled(true);  // 开启重力感应
+        this.deviceM = true;
+        cc.systemEvent.setAccelerometerEnabled(true);  // 开启重力感应
         cc.systemEvent.on(cc.SystemEvent.EventType.DEVICEMOTION, this.deviceMotionCb, this);  // 注册重力感应监听
     },
 
@@ -329,5 +330,9 @@ cc.Class({
     },
     onShareClick() {
         cc.log(`分享`);
+    },
+    onSuoDingClick() {
+        this.deviceM = !this.deviceM;
+        cc.systemEvent.setAccelerometerEnabled(this.deviceM);  // 开启重力感应
     },
 });
