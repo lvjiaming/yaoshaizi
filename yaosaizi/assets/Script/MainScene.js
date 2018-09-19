@@ -192,15 +192,16 @@ cc.Class({
      */
     playAni() {
         if (this.CurMoShiNode) {
-            this.soundId = cc.audioEngine.play(this.YaoShaiZiSound, true, 1);
+            // this.soundId = cc.audioEngine.play(this.YaoShaiZiSound, true, 1);
+            this.node.getComponent(cc.AudioSource).play();
             cc.log(this.soundId);
             const ani1 = cc.sequence(cc.moveTo(0.1, cc.v2(-60,this.CurMoShiNode.getChildByName("Ysz_Di").y)), cc.moveTo(0.1, cc.v2(60,this.CurMoShiNode.getChildByName("Ysz_Di").y)), cc.moveTo(0.1, cc.v2(0,this.CurMoShiNode.getChildByName("Ysz_Di").y)));
-            const ani = cc.repeat(ani1, 5);
+            const ani = cc.repeat(ani1, 4);
             this.CurMoShiNode.getChildByName("Ysz_Di").runAction(cc.sequence(ani, cc.callFunc(() => {
                 cc.log(`21111`);
-                if (this.soundId) {
-                    cc.audioEngine.stop(this.soundId);
-                }
+                // if (this.soundId) {
+                //     cc.audioEngine.stop(this.soundId);
+                // }
                 this.aniPlay = false;
             })));
         }
