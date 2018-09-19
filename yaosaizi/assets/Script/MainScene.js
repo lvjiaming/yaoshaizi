@@ -32,6 +32,10 @@ cc.Class({
             default: null,
             type: cc.Node,
         },
+        // YaoShaiZiSound: {
+        //     default: null,
+        //     type: cc.AudioClip,
+        // },
         CurSelectShaiZiNum: 0,  // 当前选择的骰子数量
         CurShaiZiZuHe: [],
         CurGameMoShi: null,
@@ -182,10 +186,15 @@ cc.Class({
      */
     playAni() {
         if (this.CurMoShiNode) {
+            this.soundId = cc.audioEngine.play(this.YaoShaiZiSound, true, 1);
+            cc.log(this.soundId);
             const ani1 = cc.sequence(cc.moveTo(0.1, cc.v2(-60,this.CurMoShiNode.getChildByName("Ysz_Di").y)), cc.moveTo(0.1, cc.v2(60,this.CurMoShiNode.getChildByName("Ysz_Di").y)), cc.moveTo(0.1, cc.v2(0,this.CurMoShiNode.getChildByName("Ysz_Di").y)));
             const ani = cc.repeat(ani1, 5);
             this.CurMoShiNode.getChildByName("Ysz_Di").runAction(cc.sequence(ani, cc.callFunc(() => {
                 cc.log(`21111`);
+                if (this.soundId) {
+                    cc.audioEngine.stop(this.soundId);
+                }
                 this.aniPlay = false;
             })));
         }
