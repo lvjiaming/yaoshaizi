@@ -36,7 +36,7 @@ cc.Class({
         //     default: null,
         //     type: cc.AudioClip,
         // },
-        CurSelectShaiZiNum: 0,  // 当前选择的骰子数量
+        CurSelectShaiZiNum: 6,  // 当前选择的骰子数量
         CurShaiZiZuHe: [],
         CurGameMoShi: null,
     },
@@ -65,8 +65,10 @@ cc.Class({
      *  重力感应回调
      */
     deviceMotionCb(data) {
-        cc.log(data);
         cc.log(data.acc.x + "   " + data.acc.y);
+        if (data.acc.x >= 5 || data.acc.y >= 5) {
+            this.onYaoYiYao();
+        }
     },
 
     /**
@@ -168,13 +170,17 @@ cc.Class({
                 break;
             }
             case cc.gameCfg.GAME_MOSHI.CUSTOM: {
-                this.CurShaiZiZuHe.push(Math.floor(Math.random()*6) + 1);
+                let max = 0;
                 for (let i = 1; i < 7; i++) {
                     const node = this.CurMoShiNode.getChildByName(`Box${i}`);
                     if (node) {
                         cc.gameCfg.CUSTOM_MOSHI_CFG[i] = node.getChildByName("Edit").getComponent(cc.EditBox).string;
+                        if (node.getChildByName("Edit").getComponent(cc.EditBox).string == "点击编辑") {
+                            max++;
+                        }
                     }
                 }
+                this.CurShaiZiZuHe.push(Math.floor(Math.random()*(6 - max)) + 1);
                 cc.log(cc.gameCfg.CUSTOM_MOSHI_CFG);
                 break;
             }
