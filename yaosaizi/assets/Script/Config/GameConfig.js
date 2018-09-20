@@ -20,6 +20,21 @@ const GameCfg = {
             url: "http://www.baidu.com",
             texture: "game04",
         },
+        {
+            name: "斗地主3",
+            url: "http://www.baidu.com",
+            texture: "game04",
+        },
+        {
+            name: "斗地主3",
+            url: "http://www.baidu.com",
+            texture: "game04",
+        },
+        {
+            name: "斗地主3",
+            url: "http://www.baidu.com",
+            texture: "game04",
+        },
     ],
     MAX_SHUAIZI_NUM: 6,
     GAME_MOSHI: { // 游戏模式

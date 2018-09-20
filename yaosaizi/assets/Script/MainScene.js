@@ -104,6 +104,7 @@ cc.Class({
      * @param data
      */
     setShaiZiNum() {
+        this.initShuiZiNum();
         this.CurShaiZiZuHe.forEach((item1) => {
             let num = 0;
             this.CurShaiZiZuHe.forEach((item2) => {
@@ -135,7 +136,7 @@ cc.Class({
                 dian = dian + item;
             });
             this.SumShaiZiDianNode.string = dian;
-        }
+    }
     },
     /**
      *  减少一个骰子
@@ -307,6 +308,12 @@ cc.Class({
             }
         }
     },
+    baomiLabel() {
+        this.SumShaiZiDianNode.string = "?";
+        this.ShuaiZiNumNode.children.forEach((item) => {
+            item.getChildByName("num").getComponent(cc.Label).string = "?";
+        });
+    },
     onOpenGai(event, custom, cb) {
         cc.log(`揭开盖子`);
         if (!this.aniPlay) {
@@ -324,9 +331,7 @@ cc.Class({
                 this.setSumShaiZiDian();
                 this.showShaiZi();
             } else {
-                // this.CurShaiZiZuHe = [];
-                // this.setSumShaiZiDian();
-                // this.initShuiZiNum();
+                this.baomiLabel();
             }
             if (cb) {
                 this.aniPlay = true;
