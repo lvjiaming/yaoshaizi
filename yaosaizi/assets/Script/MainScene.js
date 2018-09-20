@@ -170,18 +170,29 @@ cc.Class({
                 break;
             }
             case cc.gameCfg.GAME_MOSHI.CUSTOM: {
-                let max = 0;
+                let notArr = [];
                 for (let i = 1; i < 7; i++) {
                     const node = this.CurMoShiNode.getChildByName(`Box${i}`);
                     if (node) {
                         cc.gameCfg.CUSTOM_MOSHI_CFG[i] = node.getChildByName("Edit").getComponent(cc.EditBox).string;
                         if (node.getChildByName("Edit").getComponent(cc.EditBox).string == "点击编辑") {
-                            max++;
+                            notArr.push(i);
                         }
                     }
                 }
-                this.CurShaiZiZuHe.push(Math.floor(Math.random()*(6 - max)) + 1);
-                cc.log(cc.gameCfg.CUSTOM_MOSHI_CFG);
+                const index = Math.floor(Math.random()*6) + 1;
+                let has = false;
+                notArr.forEach((item) => {
+                    if (item == index) {
+                        has = true;
+                    }
+                });
+                if (has) {
+                    this.createShaiZiZuHe();
+                } else {
+                    this.CurShaiZiZuHe.push(index);
+                    cc.log(cc.gameCfg.CUSTOM_MOSHI_CFG);
+                }
                 break;
             }
         }
@@ -313,9 +324,9 @@ cc.Class({
                 this.setSumShaiZiDian();
                 this.showShaiZi();
             } else {
-                this.CurShaiZiZuHe = [];
-                this.setSumShaiZiDian();
-                this.initShuiZiNum();
+                // this.CurShaiZiZuHe = [];
+                // this.setSumShaiZiDian();
+                // this.initShuiZiNum();
             }
             if (cb) {
                 this.aniPlay = true;
