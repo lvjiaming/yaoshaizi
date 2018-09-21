@@ -24,11 +24,12 @@ cc.Class({
      *  初始化纹理
      */
     initSpr() {
-        cc.loader.loadRes(`texture/${this.node.data.texture}`, cc.SpriteFrame, (err, sprframe) => {
+        cc.loader.load(this.node.data.imgUrl, (err, texture) => {
             if (err) {
                 console.error(`err: ${err}`);
             } else {
                 if (this.spr) {
+                    const sprframe = new cc.SpriteFrame(texture);
                     this.spr.spriteFrame = sprframe;
                 }
             }
@@ -43,7 +44,7 @@ cc.Class({
         }
     },
     onBtnClick() {
-        cc.sys.openURL(this.node.data.url);
+        cc.sys.openURL(this.node.data.apkUrl);
     },
 
     start () {

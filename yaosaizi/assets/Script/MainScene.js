@@ -46,13 +46,32 @@ cc.Class({
     onLoad () {
         this.CurMoShiNode = this.MoShiOneNode;
         this.CurGameMoShi = cc.gameCfg.GAME_MOSHI.SIMPLE;
-        this.showAdvertList();
+        // this.showAdvertList();
         this.initShuiZiNum();
         this.setSelectShaiZiNum();
         this.setSumShaiZiDian();
         this.deviceM = true;
         cc.systemEvent.setAccelerometerEnabled(true);  // 开启重力感应
         cc.systemEvent.on(cc.SystemEvent.EventType.DEVICEMOTION, this.deviceMotionCb, this);  // 注册重力感应监听
+
+        /**
+         *  获取推荐游戏列表
+         * @type {XMLHttpRequest}
+         */
+        let self = this;
+        const xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && (xhr.status >= 200 && xhr.status < 400)) {
+                const response = xhr.responseText;
+                console.log(JSON.parse(response));
+                if (JSON.parse(response).code == 0) {
+                    self.showAdvertList(JSON.parse(response).data)
+                }
+            }
+        };
+        xhr.open("GET", "https://bar.91hotdog.com/api/getGames", true);
+        xhr.send();
+
     },
 
     start () {
@@ -74,13 +93,13 @@ cc.Class({
     /**
      *  显示广告列表
      */
-    showAdvertList() {
+    showAdvertList(data) {
         if (this.AdvertNode) {
             cc.loader.loadRes("prefabs/AdvertItem", (err, prefab) => {
                 if (err) {
                     console.error(`err: ${err}`);
                 } else {
-                    cc.gameCfg.AdvertCfg.forEach((item) => {
+                    data.forEach((item) => {
                         const advertItem = cc.instantiate(prefab);
                         advertItem.data = item;
                         this.AdvertNode.addChild(advertItem);
